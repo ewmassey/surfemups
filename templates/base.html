@@ -1,0 +1,134 @@
+{% macro render_pagination(pagination) %}
+  <div class=pagination>
+  	{% if pagination.has_prev %}
+  		<a href="{{ url_for_other_page(pagination.page -1)}}">&laquo; Previous</a>
+  	{% endif %}
+  	{%- for page in pagination.iter_pages() %}
+  		{% if page %}
+  			{% if page != pagination.page %}
+  				<a href="{{ url_for_other_page(page) }}">{{ page }}</a>
+  			{% else %}
+  				<strong>{{ page }}</strong>
+  			{% endif %}
+  		{% else %}
+  			<span class=elipsis>...</span>
+  		{% endif %}
+  	{%- endfor %}
+  	{% if pagination.has_next %}
+  		<a href="{{ url_for_other_page(pagination.page +1)}}">Next &raquo;</a>
+  	{% endif %}
+  </div>
+{% endmacro %}
+
+
+<!doctype html>
+<html>
+  <head>
+    {% block head %}
+    <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.2.2/css/bootstrap-combined.min.css" rel="stylesheet">
+    <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.2.2/js/bootstrap.min.js"></script>
+    <title>{% block title %}Surf 'em Ups!{% endblock %}</title>
+    <!-- Le styles -->
+    <link href="../assets/css/bootstrap.css" rel="stylesheet">
+    <style>
+      body {
+        padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
+      }
+    </style>
+    {% endblock %}
+  </head>
+<body>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+          <a class="brand" href="/">Surf 'em Ups!</a>
+	        <ul class="nav">
+	          <li><a href="/instagram/rank-surfers">All Surfers</a></li>
+	          <li><a href="/instagram/unconfirmed-surfers">Uncofirmed Surfers</a></li>
+	     	  <li><a href="/instagram/confirmed-surfers">Approachable Surfers</a></li>
+	        </ul>
+          <form action="/instagram/add-surfer" method="POST" class="navbar-form pull-right">
+          	<input type="text" name="name" class="span2">
+          	<button type="submit" class="btn">Add Account</button>
+          </form><!--/.nav-collapse -->
+        </div>
+      </div>
+    </div>
+  <div class="container" id="content">
+
+  	{% block content %}{% endblock %}
+  	{% block table %}
+	{{ render_pagination(pagination) }}
+	<table class="table table-striped">
+		<thead>
+	  		<th>account</th>
+	  		<th>photo count</th>
+	  		<th>followers</th>
+  			<th>following</th>
+	  		<th>Confirmed Surfer</th>
+	  		<th>Surfer Ranking</th>
+	  		<th>Approachability</th>
+  		</thead>
+		{%- for surfer in surfers %}
+		{% if not surfer.deleted %}
+			<tr>
+				<td>
+					<a href="http://web.stagram.com/n/{{surfer.name}}">{{surfer.name}}</a>
+				</td>
+				<td>
+					{{surfer.photo_count}}
+				</td>
+			    <td>
+					{{surfer.followers}}
+				</td>
+				<td>
+					{{surfer.following}}
+				</td>
+				<td>
+					{{surfer.surfing}}
+				</td>
+				<td>
+					{{surfer.coin}}
+				</td>
+				<td>
+					{{surfer.F}}
+				</td>
+				<td>
+					<form action="/instagram/set-state", method="post">
+						<input type="hidden" name="state" value="True">
+						<input type="hidden" name="name" value="{{surfer.name}}">
+						<input class="btn btn-mini" type="submit" name="set_state" value="true">
+					</form>
+				</td>
+				<td>
+					<form action="/instagram/set-state", method="post">
+						<input type="hidden" name="state" value="False">
+						<input type="hidden" name="name" value="{{surfer.name}}">
+						<input class="btn btn-mini" type="submit" name="set_state" value="false">
+					</form>
+				</td>			
+				<td>
+					<form action="/instagram/delete", method="post">
+						<input type="hidden" name="name" value="{{surfer.name}}">
+						<input class="btn btn-mini" type="submit" name="del" value="delete">
+					</form>
+				</td>
+			</tr>
+		{% endif %}
+		{%- endfor %}
+	</table>
+	{{ render_pagination(pagination) }}
+	{% endblock %}
+  </div>
+
+  <div class="container" id="footer">
+    {% block footer %}
+    &copy; Copyright 2013 by <a href="http://www.zzyzxreptiles.biz">zzyzx reptiles</a>.
+    {% endblock %}
+  </div>
+</body>
