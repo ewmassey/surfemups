@@ -8,7 +8,7 @@ from flask.ext.pymongo import PyMongo
 #import operator
 
 app = Flask(__name__)
-if os.environ.get('MONGOHQ_URL') or True:
+if os.environ.get('MONGOHQ_URL'):
     app.config['MONGO_URI'] = "mongodb://surfemups:surf3mup5@linus.mongohq.com:10045/app10640790"
 mongo = PyMongo(app)
 
