@@ -197,7 +197,7 @@ def scrape(name, crawl_mentions=False):
     url = "/n/%s" % name
     profile = crawl_page(url, profile={})
 
-    if crawl_mentions:
+    if crawl_mentions and profile.get("mentions"):
         add_to_crawl(profile.get("mentions").keys())
     mongo.db.instagram.update({"name": profile.get("name")}, profile, upsert=True)
 
