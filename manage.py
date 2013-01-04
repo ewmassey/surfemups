@@ -28,7 +28,7 @@ def crawl(all_=False, keep_crawling=False):
         for acct in mongo.db.instagram_to_crawl.find():
             crawl_count -= 1
             print "Scraping ", acct.get("name"), "remaining: ", crawl_count
-            scrape(acct.get("name"))
+            scrape(acct.get("name"), crawl_mentions=True)
             mongo.db.instagram_to_crawl.remove(acct)
         if keep_crawling:
             count = mongo.db.instagra_to_crawl.find().count()
