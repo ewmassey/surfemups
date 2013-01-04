@@ -70,8 +70,12 @@ def home():
 def instagram(page):
 
     accounts = mongo.db.instagram.find({"deleted": {"$exists": False}}).sort("coin", -1)
+    count = accounts.count()
     surfers, pagination = get_context(accounts, page)
-    return render_template("all_surfers.html", surfers=surfers, pagination=pagination)
+    return render_template("all_surfers.html",
+        surfers=surfers,
+        pagination=pagination,
+        count=count)
 
 
 @app.route("/instagram/confirmed-surfers", defaults={'page': 1}, methods=["GET"])
@@ -79,8 +83,12 @@ def instagram(page):
 def instagram_confirmed_surfers(page):
 
     accounts = mongo.db.instagram.find({"surfing": True}).sort("F", -1)
+    count = accounts.count()
     surfers, pagination = get_context(accounts, page)
-    return render_template("approachable_surfers.html", surfers=surfers, pagination=pagination)
+    return render_template("approachable_surfers.html",
+        surfers=surfers,
+        pagination=pagination,
+        count=count)
 
 
 @app.route("/instagram/unconfirmed-surfers", defaults={'page': 1}, methods=["GET"])
@@ -90,8 +98,12 @@ def instagram_unconfirmed_surfers(page):
         {"$and": [{"deleted": {"$exists": False}},
                   {"surfing": {"$exists": False}}]},
                   ).sort("coin", -1)
+    count = accounts.count()
     surfers, pagination = get_context(accounts, page)
-    return render_template("unconfirmed_surfers.html", surfers=surfers, pagination=pagination)
+    return render_template("unconfirmed_surfers.html",
+        surfers=surfers,
+        pagination=pagination,
+        count=count)
 
 
 @app.route("/instagram/set-state", methods=["POST"])

@@ -201,6 +201,7 @@ def scrape(name, crawl_mentions=False):
     else:
         profile = profile_new
     if (crawl_mentions or profile.get("surfing")) and profile.get("mentions"):
+        print profile.get("mentions").keys()
         add_to_crawl(profile.get("mentions").keys())
     mongo.db.instagram.update({"name": profile.get("name")}, profile, upsert=True)
 
