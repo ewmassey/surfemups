@@ -116,7 +116,7 @@ def set_state():
 def add_surfer():
     referer = request.headers.get("Referer")
     name = request.form["name"]
-    profile = scrape(name)
+    profile = scrape(name, crawl_mentions=True)
     if referer == None:
         referer = '/'
     return redirect(referer)
