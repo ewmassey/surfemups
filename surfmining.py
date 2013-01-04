@@ -34,6 +34,7 @@ def crawl_page(url, profile={}):
         info_block = soup.find("div", id="user_info")
         if info_block == None:
             profile["deleted"] = True
+            time.sleep(0.5)
             print profile["name"], "is not active."
             return profile
 
