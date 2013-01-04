@@ -139,7 +139,7 @@ def delete_surfer():
 
     if request.method == 'POST':
         name = request.form["name"]
-        mongo.db.instagram.remove({"name": name})
+        mongo.db.instagram.remove({"name": name}, multi=True)
         return redirect(url_for('instagram'))
 
 if __name__ == "__main__":
